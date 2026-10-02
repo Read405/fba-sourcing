@@ -60,7 +60,13 @@ def load_evaluations(conn, limit: int = 50) -> list[dict]:
     for r in rows:
         record = json.loads(r["result_json"])
         g3 = next((g for g in record.get("gates", []) if g["number"] == 3), None)
-        out.append({**dict(r), "record": record, "money": g3["data"] if g3 else {}})
+        data = dict(g3["data"]) if g3 else {}
+        if g3 and "sale_price" in data and "sale_is_upper_bound" not in data:
+            # Records saved before the flag existed: an UNVERIFIED sale-price check
+            # with a sale price means it was the current-price upper bound.
+            data["sale_is_upper_bound"] = any(c["name"] == "Sale price" and c["status"] == "unverified"
+                                              for c in g3["checks"])
+        out.append({**dict(r), "record": record, "money": data})
     return out
 
 
@@ -110,6 +116,8 @@ def render_split(data: dict) -> str:
         caption = f"Costs of {money(cost_total)} are more than the {money(sale)} sale price"
     else:
         caption = f"Where the {money(sale)} sale price goes"
+    if data.get("sale_is_upper_bound"):
+        caption += " (the most it can be; the 90-day average is unverified)"
     unknown_all = [u for g in groups for u in g[2]]
     footnote = (f'<p class="note">Profit is before UNVERIFIED costs: {esc(", ".join(unknown_all))}.</p>'
                 if unknown_all else "")
@@ -163,8 +171,9 @@ def render_detail(ev: dict) -> str:
     units = ev["record"].get("units") or {}
     plan = ""
     if units:
-        plan = (f'<p class="plan">Buy <b>{units["units"]} units</b> at {esc(money(units["per_unit"]))} landed '
-                f'= {esc(money(units["total"]))} (cap {esc(money(units["cap"]))})</p>')
+        lead = "Buy" if ev["verdict"] == BUY else "If everything checks out, up to"
+        plan = (f'<p class="plan">{lead} <b>{units["units"]} units</b> at {esc(money(units["per_unit"]))} '
+                f'landed = {esc(money(units["total"]))} (cap {esc(money(units["cap"]))})</p>')
     confirm = ev["record"].get("to_confirm") or []
     confirm_html = ("<h3>To confirm before buying</h3><ul class=\"confirm\">"
                     + "".join(f"<li>{esc(c)}</li>" for c in confirm) + "</ul>") if confirm else ""

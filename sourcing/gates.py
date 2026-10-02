@@ -123,7 +123,9 @@ def gate2_will_it_sell(cand: Candidate, ctx: EvalContext, source, channel) -> Ga
             g.add("Sales rank", PASS if category.verified else UNVERIFIED, detail)
     else:
         missing = [f.name for f in (rank, size, category) if not f.verified]
-        g.add("Sales rank", UNVERIFIED, f"needs verified {', '.join(missing)}")
+        shown = (f"rank #{int(rank.value):,} in {category.value if category.verified else 'its category'}; "
+                 if rank.verified else "")
+        g.add("Sales rank", UNVERIFIED, f"{shown}the top-{limit}% test needs verified {', '.join(missing)}")
 
     bought = cand.get("bought_past_month")
     if bought.verified:
@@ -166,7 +168,20 @@ def gate3_will_i_make_money(cand: Candidate, ctx: EvalContext, source, channel) 
 
     current, average = cand.get("current_price"), cand.get("avg_price_90d")
     sale = None
-    if current.verified and average.verified:
+    # The sale price used is min(current, 90-day average), so with only the
+    # current price known it is an upper bound: anything that fails at the
+    # current price fails for certain, and anything that passes stays UNVERIFIED.
+    upper_bound = current.verified and not average.verified
+    if upper_bound:
+        # A sale price above your maximum fails the range check anyway, so the
+        # most a passing sale price can be is the lower of current and maximum.
+        cur, cap = D(current.value), t("sale_price_max")
+        sale = min(cur, cap)
+        basis = (f"the current price {money(cur)}" if cur <= cap else
+                 f"your {money(cap)} maximum (current {money(cur)} is above it)")
+        g.add("Sale price", UNVERIFIED, f"90-day average {average.provenance}. Using {basis}, "
+                                        f"the most a passing sale price can be")
+    elif current.verified and average.verified:
         cur, avg = D(current.value), D(average.value)
         sale = min(cur, avg)
         tolerance = t("price_spike_tolerance_pct")
@@ -183,10 +198,15 @@ def gate3_will_i_make_money(cand: Candidate, ctx: EvalContext, source, channel) 
 
     if sale is not None:
         low, high = t("sale_price_min"), t("sale_price_max")
-        if low <= sale <= high:
+        if sale < low:
+            g.add("Price range", FAIL, f"{money(sale)} is below your {money(low)}-{money(high)} range")
+        elif upper_bound:
+            g.add("Price range", UNVERIFIED, f"depends on the 90-day average (current "
+                                             f"{money(current.value)}, range {money(low)}-{money(high)})")
+        elif sale <= high:
             g.add("Price range", PASS, f"{money(sale)} is within {money(low)}-{money(high)}")
         else:
-            g.add("Price range", FAIL, f"{money(sale)} is outside your {money(low)}-{money(high)} range")
+            g.add("Price range", FAIL, f"{money(sale)} is above your {money(low)}-{money(high)} range")
 
     weight, max_weight = cand.get("unit_weight_lb"), t("max_weight_lb")
     if not weight.verified:
@@ -215,12 +235,14 @@ def gate3_will_i_make_money(cand: Candidate, ctx: EvalContext, source, channel) 
     inbound = channel.inbound_shipping(cand, size, ctx)
     prep = t("prep_cost_per_unit")
     costs = Breakdown(fees.lines + [inbound, Line("Prep", prep, "config.yaml prep_cost_per_unit")])
-    g.data.update(sale_price=sale, fees=fees, costs=costs)
+    g.data.update(sale_price=sale, sale_is_upper_bound=upper_bound, fees=fees, costs=costs)
 
     landed_known = landed.known_total
     net = sale - costs.known_total - landed_known
     roi = net / landed_known
     unknown = [l.label for l in costs.unknown() + landed.unknown()]
+    if upper_bound:
+        unknown.insert(0, "90-day average price")
     min_profit, min_roi = t("min_profit_per_unit"), t("min_roi")
     before_landed = sale - costs.known_total
     target = min(before_landed - min_profit, before_landed / (1 + min_roi))
@@ -244,11 +266,11 @@ def gate3_will_i_make_money(cand: Candidate, ctx: EvalContext, source, channel) 
         return g
     max_price = source.max_purchase_price(target, landed, cand, ctx)
     g.data["max_purchase_price"] = max_price
-    detail = f"{summary}. Becomes a BUY at a landed cost of {money(target)} or less"
+    detail = f"{summary}. Meets your profit and ROI minimums only at a landed cost of {money(target)} or less"
     if max_price is not None:
         detail += f" (purchase price {money(max_price)} before tax)"
     if unknown:
-        detail += f", plus whatever {', '.join(unknown)} turns out to be"
+        detail += f". Still unverified: {', '.join(unknown)}; these can only lower profit"
     g.add("Profit", SOFT_FAIL, detail)
     return g
 

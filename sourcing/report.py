@@ -54,7 +54,8 @@ def format_evaluation(ev: Evaluation) -> str:
 
     if ev.units:
         u = ev.units
-        out += ["", f"Units: {u['units']} at {money(u['per_unit'])} landed = {money(u['total'])} "
+        lead = "Units" if ev.verdict == "BUY" else "Units, if everything checks out"
+        out += ["", f"{lead}: {u['units']} at {money(u['per_unit'])} landed = {money(u['total'])} "
                     f"(cap {money(u['cap'])} = budget share of {money(u['available'])} available)"]
         if not u["enough"]:
             out.append(f"  Note: the cap allows {u['units']}, below your minimum of {u['min']} units.")

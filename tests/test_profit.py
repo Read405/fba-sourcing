@@ -103,6 +103,39 @@ def test_failing_before_unknown_costs_is_already_watch(settings):
     assert ev.verdict == WATCH
 
 
+MISSING_AVG = {"avg_price_90d": {"unverified": True, "note": "needs Keepa"}}
+
+
+def test_missing_average_still_runs_profit_on_current_price(rated):
+    ev = run(rated, make_candidate(MISSING_AVG))
+    g3 = ev.gate(3)
+    assert ev.verdict == CHECK_MANUALLY
+    assert g3.data["net_profit"] == D("6.72")                  # at the current $29.99
+    assert "90-day average price" in [c for c in ev.to_confirm if "Profit" in c][0]
+
+
+def test_missing_average_with_losing_current_price_is_definite_watch(rated):
+    ev = run(rated, make_candidate({**MISSING_AVG, "purchase_price": 16.00}))
+    assert ev.verdict == WATCH                                 # the average can only lower the price
+
+
+def test_missing_average_with_current_below_range_rejects(rated):
+    ev = run(rated, make_candidate({**MISSING_AVG, "current_price": 14.99}))
+    assert ev.verdict == REJECT and ev.failed_gate == "3"
+
+
+def test_missing_average_with_current_above_range_is_unverified(rated):
+    ev = run(rated, make_candidate({**MISSING_AVG, "current_price": 55.00}))
+    assert ev.verdict != REJECT
+    assert checks_named(ev, 3, "Price range")[0].status == "unverified"
+
+
+def test_missing_average_caps_sale_price_at_your_maximum(rated):
+    # Any sale price above $50 fails the range, so profit is never counted above $50.
+    g3 = run(rated, make_candidate({**MISSING_AVG, "current_price": 90.76})).gate(3)
+    assert g3.data["sale_price"] == D("50.00")
+
+
 def test_professional_plan_has_no_per_item_fee(rated):
     rated.config["seller"]["plan"] = "professional"
     costs = run(rated, make_candidate()).gate(3).data["costs"]
