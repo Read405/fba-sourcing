@@ -1,0 +1,79 @@
+# Where you buy. Each type sets defaults; stores are added as you mention them.
+# No store, site, or category is excluded by default. A type's `phase` is the
+# build phase that implements it.
+
+types:
+  retail_store:
+    phase: 1
+    description: >-
+      Any physical retailer: big box, grocery, pharmacy, hardware, dollar
+      stores, warehouse clubs, outlets, clearance and closing sales.
+    default_condition: new
+    proof_of_purchase: receipt
+    extra_costs: [sales_tax, membership_share]
+    typical_lead_time_days: 0
+    extra_checks:
+      - Keep the receipt. It is your proof of purchase if a brand files a complaint.
+
+  retail_online:
+    phase: 1
+    description: Any retailer or brand website, and deal sites.
+    default_condition: new
+    proof_of_purchase: order_confirmation
+    extra_costs: [sales_tax, shipping_to_me, membership_share]
+    typical_lead_time_days: null    # use the order's delivery estimate
+    extra_checks:
+      - The delivery estimate must be within max_days_to_my_door.
+
+  secondhand:
+    phase: 2
+    description: >-
+      Thrift stores, garage and estate sales, library sales, local marketplace
+      listings.
+    default_condition: used         # new only when factory sealed
+    proof_of_purchase: none
+    extra_costs: [sales_tax]
+    typical_lead_time_days: 0
+    extra_checks:
+      - Requires a condition grade.
+      - Price against used offers, never the new Buy Box.
+
+  liquidation:
+    phase: 5
+    description: >-
+      Pallets, auction lots, customer returns, shelf pulls, closeouts.
+      Evaluated at the lot level.
+    default_condition: used         # set per manifest line
+    proof_of_purchase: invoice
+    extra_costs: [buyers_premium, freight, sales_tax]
+    typical_lead_time_days: null
+    extra_checks:
+      - A manifest is required; unmanifested lots are rejected.
+
+  marketplace_flip:
+    phase: 5
+    description: Buying on one marketplace to sell on another.
+    default_condition: new
+    proof_of_purchase: order_confirmation
+    extra_costs: [seller_shipping, sales_tax]
+    typical_lead_time_days: null
+    extra_checks:
+      - Note the seller's return policy.
+
+  wholesale:
+    phase: 6
+    description: Distributors and brands.
+    default_condition: new
+    proof_of_purchase: invoice
+    extra_costs: [freight]
+    typical_lead_time_days: null
+    extra_checks:
+      - Minimum order quantities.
+      - Usually requires a resale certificate. Confirm the requirements yourself.
+
+# Stores you've used or mentioned. Example:
+#   sams_club_norman:
+#     name: Sam's Club (Norman)
+#     type: retail_store
+#     notes: membership required
+stores: {}

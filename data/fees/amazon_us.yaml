@@ -1,0 +1,363 @@
+# Amazon US fee data for the amazon_fba channel.
+# Every number was copied from the official page in `source` on the `retrieved`
+# date. Re-verify when older than 30 days, at a new year, or when a peak period
+# starts (CLAUDE.md session routine). Never change a number without updating
+# its source and retrieved date.
+#
+# Fee rows are [max weight, fee under $10, fee $10-$50, fee over $50].
+# Items priced exactly $10 or $50 use the $10-$50 column.
+
+channel: amazon_fba
+marketplace: US
+retrieved: 2026-10-02
+
+selling_plans:
+  source: https://sellercentral.amazon.com/help/hub/reference/external/G200336920
+  retrieved: 2026-10-02
+  individual: {monthly_fee: 0.00, per_item_fee: 0.99}
+  professional: {monthly_fee: 39.99, per_item_fee: 0.00}
+
+featured_offer:
+  source: https://sellercentral.amazon.com/help/hub/reference/external/G200418100
+  retrieved: 2026-10-02
+  note: >-
+    As of September 2026 Amazon has no seller eligibility requirement for the
+    Featured Offer (Buy Box); offers from all sellers, including Individual
+    plan sellers, are evaluated.
+
+referral:
+  source: https://sellercentral.amazon.com/help/hub/reference/external/G200336920
+  retrieved: 2026-10-02
+  # flat:        one rate on the whole price
+  # whole_price: the first tier whose max_price covers the price applies to the whole price
+  # portion:     each tier's rate applies to the part of the price inside it
+  # Amazon charges the greater of the percentage fee or min_fee.
+  categories:
+    "3D Printers": {type: portion, tiers: [{up_to: 200.00, rate: 0.12}, {rate: 0.05}], min_fee: 0.30}
+    "Amazon Device Accessories": {type: flat, rate: 0.45, min_fee: 0.30}
+    "Automotive and Powersports": {type: flat, rate: 0.12, min_fee: 0.30}
+    "Baby Products": {type: whole_price, tiers: [{max_price: 10.00, rate: 0.08}, {rate: 0.15}], min_fee: 0.30}
+    "Backpacks, Handbags, and Luggage": {type: flat, rate: 0.15, min_fee: 0.30}
+    "Base Equipment Power Tools": {type: flat, rate: 0.12, min_fee: 0.30}
+    "Beauty, Health and Personal Care": {type: whole_price, tiers: [{max_price: 10.00, rate: 0.08}, {rate: 0.15}], min_fee: 0.30}
+    "Business, Industrial, and Scientific Supplies": {type: flat, rate: 0.12, min_fee: 0.30}
+    "Clothing and Accessories": {type: whole_price, tiers: [{max_price: 15.00, rate: 0.05}, {max_price: 20.00, rate: 0.10}, {rate: 0.17}], min_fee: 0.30}
+    "Compact Appliances": {type: portion, tiers: [{up_to: 300.00, rate: 0.15}, {rate: 0.08}], min_fee: 0.30}
+    "Computers": {type: flat, rate: 0.08, min_fee: 0.30}
+    "Consumer Electronics": {type: flat, rate: 0.08, min_fee: 0.30}
+    "Electronics Accessories": {type: portion, tiers: [{up_to: 100.00, rate: 0.15}, {rate: 0.08}], min_fee: 0.30}
+    "Everything Else": {type: flat, rate: 0.15, min_fee: 0.30}
+    "Eyewear": {type: flat, rate: 0.15, min_fee: 0.30}
+    "Fine Art": {type: portion, tiers: [{up_to: 100.00, rate: 0.20}, {up_to: 1000.00, rate: 0.15}, {up_to: 5000.00, rate: 0.10}, {rate: 0.05}], min_fee: null}
+    "Footwear": {type: flat, rate: 0.15, min_fee: 0.30}
+    "Full-Size Appliances": {type: flat, rate: 0.08, min_fee: 0.30}
+    "Furniture": {type: portion, tiers: [{up_to: 200.00, rate: 0.15}, {rate: 0.10}], min_fee: 0.30}
+    "Gift Cards": {type: flat, rate: 0.20, min_fee: null}
+    "Grocery and Gourmet": {type: whole_price, tiers: [{max_price: 15.00, rate: 0.08}, {rate: 0.15}], min_fee: null}
+    "Home and Kitchen": {type: flat, rate: 0.15, min_fee: 0.30}
+    "Jewelry": {type: portion, tiers: [{up_to: 250.00, rate: 0.20}, {rate: 0.05}], min_fee: 0.30}
+    "Lawn and Garden": {type: flat, rate: 0.15, min_fee: 0.30}
+    "Lawn Mowers and Snow Throwers": {type: whole_price, tiers: [{max_price: 500.00, rate: 0.15}, {rate: 0.08}], min_fee: 0.30}
+    "Mattresses": {type: flat, rate: 0.15, min_fee: 0.30}
+    "Media - Books, DVD, Music, Software, Video": {type: flat, rate: 0.15, min_fee: null}
+    "Musical Instruments and AV Production": {type: flat, rate: 0.15, min_fee: 0.30}
+    "Office Products": {type: flat, rate: 0.15, min_fee: 0.30}
+    "Pet Products": {type: flat, rate: 0.15, min_fee: 0.30, note: "22% for veterinary diets, which are not modeled"}
+    "Sports and Outdoors": {type: flat, rate: 0.15, min_fee: 0.30}
+    "Tires": {type: flat, rate: 0.10, min_fee: 0.30}
+    "Tools and Home Improvement": {type: flat, rate: 0.15, min_fee: 0.30}
+    "Toys and Games": {type: flat, rate: 0.15, min_fee: 0.30}
+    "Video Game Consoles": {type: flat, rate: 0.08, min_fee: null}
+    "Video Games and Gaming Accessories": {type: flat, rate: 0.15, min_fee: null}
+    "Watches": {type: portion, tiers: [{up_to: 1500.00, rate: 0.16}, {rate: 0.03}], min_fee: 0.30}
+
+closing_fee:
+  source: https://sellercentral.amazon.com/help/hub/reference/external/G200336920
+  retrieved: 2026-10-02
+  amount: 1.80
+  fee_categories:
+    - "Media - Books, DVD, Music, Software, Video"
+    - "Video Game Consoles"
+    - "Video Games and Gaming Accessories"
+
+fulfillment:
+  source: https://sellercentral.amazon.com/help/hub/reference/external/GABBX6GZPA8MSZGW
+  size_tiers_source: https://sellercentral.amazon.com/help/hub/reference/external/GG5KW835AHDJCH8W
+  retrieved: 2026-10-02
+  dimensional_weight_divisor: 139
+  # Price columns: below the first limit; up to and including the second; above it.
+  price_band_limits: [10.00, 50.00]
+  bulky_min_side_in: 2       # small bulky, large bulky and extra-large assume a minimum width and height of 2 in
+  apparel_fee_categories: ["Clothing and Accessories"]
+  ambiguous_fee_categories: ["Footwear"]   # not stated which card applies; we charge the higher one
+  hazmat_note: Dangerous-goods rate cards are not loaded; allow_hazmat is false.
+
+  # 2026 size tiers (from January 15, 2026). Tier weight is the greater of
+  # unit and dimensional weight. Checked in order; first match wins.
+  size_tiers:
+    - {key: small_standard, standard: true, max_weight_lb: 1, max_longest: 15, max_median: 12, max_shortest: 0.75}
+    - {key: large_standard, standard: true, max_weight_lb: 20, max_longest: 18, max_median: 14, max_shortest: 8}
+    - {key: small_bulky, standard: false, max_weight_lb: 50, max_longest: 37, max_median: 28, max_shortest: 20, max_length_girth: 130}
+    - {key: large_bulky, standard: false, max_weight_lb: 50, max_longest: 59, max_median: 33, max_shortest: 33, max_length_girth: 130}
+    - {key: extra_large_0_50, standard: false, max_weight_lb: 50}
+    - {key: extra_large_50_70, standard: false, max_weight_lb: 70}
+    - {key: extra_large_70_150, standard: false, max_weight_lb: 150}
+    - {key: extra_large_150_plus, standard: false}
+
+  # Fee weight: unit weight for these tiers, greater of unit/dimensional for all others.
+  unit_weight_tiers: [small_standard, extra_large_150_plus]
+
+  surcharges:
+    - name: fuel and logistics surcharge
+      rate: 0.035
+      valid_from: 2026-04-17
+      valid_to: null
+      note: Applies on top of fulfillment fees, including holiday peak fees.
+
+  rate_cards:
+    - name: 2026 non-peak
+      product_type: standard
+      valid_from: 2026-01-15
+      valid_to: 2026-10-14
+      tiers:
+        small_standard:
+          bands_oz:
+            - [2, 2.43, 3.32, 3.58]
+            - [4, 2.49, 3.42, 3.68]
+            - [6, 2.56, 3.45, 3.71]
+            - [8, 2.66, 3.54, 3.80]
+            - [10, 2.77, 3.68, 3.94]
+            - [12, 2.82, 3.78, 4.04]
+            - [14, 2.92, 3.91, 4.17]
+            - [16, 2.95, 3.96, 4.22]
+        large_standard:
+          bands_lb:
+            - [0.25, 2.91, 3.73, 3.99]
+            - [0.5, 3.13, 3.95, 4.21]
+            - [0.75, 3.38, 4.20, 4.46]
+            - [1.0, 3.78, 4.60, 4.86]
+            - [1.25, 4.22, 5.04, 5.30]
+            - [1.5, 4.60, 5.42, 5.68]
+            - [1.75, 4.75, 5.57, 5.83]
+            - [2.0, 5.00, 5.82, 6.08]
+            - [2.25, 5.10, 5.92, 6.18]
+            - [2.5, 5.28, 6.10, 6.36]
+            - [2.75, 5.44, 6.26, 6.52]
+            - [3.0, 5.85, 6.67, 6.93]
+          above: {first_lb: 3, max_lb: 20, base: [6.15, 6.97, 7.23], per_interval: 0.08, interval_lb: 0.25}
+        small_bulky: {first_lb: 1, base: [6.78, 7.55, 7.55], per_interval: 0.38, interval_lb: 1}
+        large_bulky: {first_lb: 1, base: [8.58, 9.35, 9.35], per_interval: 0.38, interval_lb: 1}
+        extra_large_0_50: {first_lb: 1, base: [25.56, 26.33, 26.33], per_interval: 0.38, interval_lb: 1}
+        extra_large_50_70: {first_lb: 51, base: [36.55, 37.32, 37.32], per_interval: 0.75, interval_lb: 1}
+        extra_large_70_150: {first_lb: 71, base: [50.55, 51.32, 51.32], per_interval: 0.75, interval_lb: 1}
+        extra_large_150_plus: {first_lb: 151, base: [194.18, 194.95, 194.95], per_interval: 0.19, interval_lb: 1}
+
+    - name: 2026 holiday peak
+      product_type: standard
+      valid_from: 2026-10-15
+      valid_to: 2027-01-14
+      tiers:
+        small_standard:
+          bands_oz:
+            - [2, 2.62, 3.51, 3.77]
+            - [4, 2.68, 3.61, 3.87]
+            - [6, 2.76, 3.65, 3.91]
+            - [8, 2.86, 3.74, 4.00]
+            - [10, 2.98, 3.89, 4.15]
+            - [12, 3.03, 3.99, 4.25]
+            - [14, 3.14, 4.13, 4.39]
+            - [16, 3.17, 4.18, 4.44]
+        large_standard:
+          bands_lb:
+            - [0.25, 3.15, 3.97, 4.23]
+            - [0.5, 3.39, 4.21, 4.47]
+            - [0.75, 3.66, 4.48, 4.74]
+            - [1.0, 4.07, 4.89, 5.15]
+            - [1.25, 4.52, 5.34, 5.60]
+            - [1.5, 4.91, 5.73, 5.99]
+            - [1.75, 5.07, 5.89, 6.15]
+            - [2.0, 5.33, 6.15, 6.41]
+            - [2.25, 5.47, 6.29, 6.55]
+            - [2.5, 5.67, 6.49, 6.75]
+            - [2.75, 5.84, 6.66, 6.92]
+            - [3.0, 6.26, 7.08, 7.34]
+          above: {first_lb: 3, max_lb: 20, base: [6.69, 7.51, 7.77], per_interval: 0.08, interval_lb: 0.25}
+        small_bulky: {first_lb: 1, base: [7.82, 8.59, 8.59], per_interval: 0.38, interval_lb: 1}
+        large_bulky: {first_lb: 1, base: [9.62, 10.39, 10.39], per_interval: 0.38, interval_lb: 1}
+        extra_large_0_50: {first_lb: 1, base: [28.29, 29.06, 29.06], per_interval: 0.38, interval_lb: 1}
+        extra_large_50_70: {first_lb: 51, base: [39.36, 40.13, 40.13], per_interval: 0.75, interval_lb: 1}
+        extra_large_70_150: {first_lb: 71, base: [54.97, 55.74, 55.74], per_interval: 0.75, interval_lb: 1}
+        extra_large_150_plus: {first_lb: 151, base: [202.69, 203.46, 203.46], per_interval: 0.19, interval_lb: 1}
+
+    # Apparel cards list standard sizes only; bulky and extra-large apparel use
+    # the same rates as the standard card for the same period (identical on the source page).
+    - name: 2026 non-peak (apparel)
+      product_type: apparel
+      inherit: 2026 non-peak
+      valid_from: 2026-01-15
+      valid_to: 2026-10-14
+      tiers:
+        small_standard:
+          bands_oz:
+            - [2, 2.62, 3.51, 3.77]
+            - [4, 2.64, 3.54, 3.80]
+            - [6, 2.68, 3.59, 3.85]
+            - [8, 2.81, 3.69, 3.95]
+            - [10, 3.00, 3.91, 4.17]
+            - [12, 3.10, 4.09, 4.35]
+            - [14, 3.20, 4.20, 4.46]
+            - [16, 3.30, 4.25, 4.51]
+        large_standard:
+          bands_lb:
+            - [0.25, 3.48, 4.30, 4.56]
+            - [0.5, 3.68, 4.50, 4.76]
+            - [0.75, 3.90, 4.72, 4.98]
+            - [1.0, 4.35, 5.17, 5.43]
+            - [1.25, 5.05, 5.87, 6.13]
+            - [1.5, 5.22, 6.04, 6.30]
+            - [1.75, 5.32, 6.14, 6.40]
+            - [2.0, 5.43, 6.25, 6.51]
+            - [2.25, 5.78, 6.60, 6.86]
+            - [2.5, 5.90, 6.72, 6.98]
+            - [2.75, 5.95, 6.77, 7.03]
+            - [3.0, 6.08, 6.90, 7.16]
+          above: {first_lb: 3, max_lb: 20, base: [6.15, 6.97, 7.23], per_interval: 0.16, interval_lb: 0.5}
+
+    - name: 2026 holiday peak (apparel)
+      product_type: apparel
+      inherit: 2026 holiday peak
+      valid_from: 2026-10-15
+      valid_to: 2027-01-14
+      tiers:
+        small_standard:
+          bands_oz:
+            - [2, 2.85, 3.74, 4.00]
+            - [4, 2.87, 3.77, 4.03]
+            - [6, 2.93, 3.84, 4.10]
+            - [8, 3.06, 3.94, 4.20]
+            - [10, 3.27, 4.18, 4.44]
+            - [12, 3.37, 4.36, 4.62]
+            - [14, 3.49, 4.49, 4.75]
+            - [16, 3.59, 4.54, 4.80]
+        large_standard:
+          bands_lb:
+            - [0.25, 3.79, 4.61, 4.87]
+            - [0.5, 4.00, 4.82, 5.08]
+            - [0.75, 4.23, 5.05, 5.31]
+            - [1.0, 4.69, 5.51, 5.77]
+            - [1.25, 5.42, 6.24, 6.50]
+            - [1.5, 5.59, 6.41, 6.67]
+            - [1.75, 5.71, 6.53, 6.79]
+            - [2.0, 5.82, 6.64, 6.90]
+            - [2.25, 6.22, 7.04, 7.30]
+            - [2.5, 6.34, 7.16, 7.42]
+            - [2.75, 6.41, 7.23, 7.49]
+            - [3.0, 6.54, 7.36, 7.62]
+          above: {first_lb: 3, max_lb: 20, base: [6.82, 7.64, 7.90], per_interval: 0.16, interval_lb: 0.5}
+
+storage:
+  source: https://sellercentral.amazon.com/help/hub/reference/external/G3EDYEF6KUCFQTNM
+  retrieved: 2026-10-02
+  note: >-
+    Base monthly fee per cubic foot, non-dangerous goods. Individual sellers
+    and new sellers pay no storage utilization surcharge.
+  rates_per_cubic_foot:
+    - {months: [1, 2, 3, 4, 5, 6, 7, 8, 9], standard: 0.78, oversize: 0.56}
+    - {months: [10, 11, 12], standard: 2.40, oversize: 1.40}
+
+inbound_placement:
+  source: https://sellercentral.amazon.com/help/hub/reference/external/GC3Q44PBK8BXQW3Z
+  retrieved: 2026-10-02
+  valid_from: 2026-01-15
+  note: >-
+    Per unit. The fee varies inside each range by inbound location. The
+    Amazon-optimized option has no fee but needs at least five identical
+    cartons per item. New sellers who ship within 90 days of listing may get
+    $400 in placement credits, which we don't count. Extra-large items pay no
+    placement fee.
+  # Rows are [max weight, low, high]. Small standard uses unit weight; others
+  # use the greater of unit and dimensional weight.
+  minimal_splits:
+    small_standard:
+      bands_oz:
+        - [8, 0.14, 0.32]
+        - [16, 0.16, 0.32]
+    large_standard:
+      bands_lb:
+        - [0.75, 0.20, 0.40]
+        - [1.5, 0.24, 0.50]
+        - [3, 0.34, 0.60]
+        - [5, 0.38, 0.76]
+        - [7, 0.40, 0.98]
+        - [10, 0.42, 1.20]
+        - [15, 0.44, 1.50]
+        - [20, 0.55, 1.90]
+    small_bulky:
+      bands_lb:
+        - [5, 1.10, 1.60]
+        - [12, 1.75, 2.40]
+        - [28, 2.74, 3.50]
+        - [42, 3.95, 4.95]
+        - [50, 4.80, 5.95]
+    large_bulky:
+      bands_lb:
+        - [5, 1.30, 1.80]
+        - [12, 2.10, 2.90]
+        - [28, 3.40, 4.10]
+        - [42, 4.70, 5.60]
+        - [50, 5.50, 6.50]
+
+low_inventory_level_fee:
+  source: https://sellercentral.amazon.com/help/hub/reference/external/GV43F6S76Y9DHYRH
+  retrieved: 2026-10-02
+  charged: false
+  reason: >-
+    Amazon exempts products that sold fewer than 20 units in the past 7 days.
+    At 3-5 units per product you stay under that. Revisit if you ever stock 20+
+    units of one product.
+
+returns_processing:
+  source: https://sellercentral.amazon.com/help/hub/reference/external/GZGEQLTM3RZXUV6T
+  retrieved: 2026-10-02
+  note: >-
+    Non-apparel products are exempt when they ship fewer than 25 units in a
+    month, which covers 3-5 unit buys. Apparel and shoes pay a fee on every
+    customer return.
+  exempt_below_units_per_month: 25
+  per_return_fee_categories: ["Clothing and Accessories", "Footwear"]
+  return_rate_threshold_pct:
+    "Amazon Device Accessories": 11.3
+    "Amazon Explore": 4.8
+    "Automotive and Powersports": 9.1
+    "Baby Products": 9.3
+    "Backpacks, Handbags, and Luggage": 12.8
+    "Base Equipment Power Tools": 7.1
+    "Beauty, Health and Personal Care": 5.5
+    "Business, Industrial, and Scientific Supplies": 6.0
+    "Compact Appliances": 12.6
+    "Computers": 11.4
+    "Consumer Electronics": 11.2
+    "Electronics Accessories": 8.8
+    "Everything Else": 4.8
+    "Eyewear": 12.1
+    "Fine Art": 5.6
+    "Full-Size Appliances": 11.9
+    "Furniture": 9.6
+    "Gift Cards": 4.8
+    "Grocery and Gourmet": 2.9
+    "Home and Kitchen": 8.1
+    "Jewelry": 10.8
+    "Lawn and Garden": 7.7
+    "Lawn Mowers and Snow Throwers": 9.5
+    "Mattresses": 9.3
+    "Media - Books, DVD, Music, Software, Video": 5.1
+    "Musical Instruments and AV Production": 9.2
+    "Office Products": 4.4
+    "Pet Products": 10.2
+    "Sports and Outdoors": 8.7
+    "Tires": 8.7
+    "Tools and Home Improvement": 8.7
+    "Toys and Games": 4.7
+    "Video Game Consoles": 10.7
+    "Video Games and Gaming Accessories": 6.5
+    "Watches": 12.0

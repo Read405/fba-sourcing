@@ -1,0 +1,103 @@
+# Your situation, thresholds and limits. Confirmed by you on 2026-10-02.
+# Thresholds change only when you approve it. Claude may propose a change with
+# evidence, but never edits a threshold on its own.
+
+seller:
+  marketplace: US
+  plan: individual          # individual | professional
+  plan_source: "user, 2026-10-02"
+
+capital:
+  starting_total: 500.00    # day-one number; live capital is computed from the ledger
+  reserved:
+    seller_plan_monthly: 39.99    # from your brief. The Individual plan has no monthly fee; kept reserved until you say otherwise
+    shipping_and_supplies: 40.00
+
+locations:
+  active: norman_ok
+  saved:
+    norman_ok:
+      name: Norman, Oklahoma
+      sales_tax_rate: 0.0875
+      sales_tax_source: https://www.normanok.gov/businesses/sales-tax
+      sales_tax_retrieved: 2026-10-02
+      sales_tax_note: >-
+        4.5% state + 0.125% Cleveland County + 4.125% City of Norman. A few
+        addresses inside Norman fall in other tax districts; the tax printed on
+        a receipt overrides this rate.
+
+thresholds:
+  max_days_to_my_door: 5
+  min_profit_per_unit: 4.00
+  min_roi: 0.40
+  sale_price_min: 15.00
+  sale_price_max: 50.00
+  max_weight_lb: 2            # unit weight of the packaged item
+  allow_oversize: false
+  allow_hazmat: false
+  max_rank_percentile: 2      # percent of the top-level category
+  max_fba_offers_near_buybox: 20
+  buybox_band_pct: 2          # offers within 2% of the Buy Box price count as "near"
+  price_spike_tolerance_pct: 15
+  min_expiry_months: 6
+  units_per_product_min: 3
+  units_per_product_max: 5
+  max_budget_share_per_product: 0.20
+  prep_cost_per_unit: 0.15
+  lot_unsellable_haircut: 0.30
+
+# Costs only your own seller account can tell us. Until a value is filled in
+# with a source and date, it is UNVERIFIED and no product can be rated BUY.
+unverified_costs:
+  inbound_shipping_per_lb:
+    value: null
+    source: null
+    retrieved: null
+    how_to_get: >-
+      In Seller Central, Send to Amazon shows the Amazon Partnered Carrier cost
+      for a box before you confirm the shipment. Divide that cost by the box
+      weight in pounds.
+  inbound_transit_days:
+    value: null
+    source: null
+    retrieved: null
+    how_to_get: Send to Amazon shows the carrier's delivery estimate for your shipment.
+
+# Policy choices Claude made on 2026-10-02 that your brief doesn't cover.
+# Each one makes results more conservative. Change only with your approval.
+assumptions:
+  sell_window_days: 90        # fees use the highest rate in effect within this many days of the evaluation
+  storage_months_charged: 1   # months of FBA storage charged per unit
+  inbound_placement_option: minimal_splits   # 3-5 units rarely qualify for the free 5-identical-carton option
+  inbound_placement_rate: high              # charge the top of Amazon's published range
+  high_return_threshold_pct: 10             # flag categories whose Amazon return-rate threshold is at or above this
+
+stages:
+  current: 1                  # moves only with your approval
+  levels:
+    1:
+      capital_max: 1000
+      source_types: [retail_store, retail_online, secondhand]
+      purchase_limits: {units_per_product_min: 3, units_per_product_max: 5, max_budget_share_per_product: 0.20}
+    2:
+      capital_min: 1000
+      capital_max: 3000
+      min_profitable_review_cycles: 2
+      source_types: [retail_store, retail_online, secondhand, liquidation, marketplace_flip]
+      purchase_limits: null   # set when you approve moving up
+    3:
+      capital_min: 3000
+      requires: consistent profit, judged by you from review results
+      source_types: [retail_store, retail_online, secondhand, liquidation, marketplace_flip, wholesale]
+      purchase_limits: null
+
+channels:
+  active: [amazon_fba]
+
+paths:
+  database: data/sourcing.db
+  fees:
+    amazon_fba: data/fees/amazon_us.yaml
+  calendar:
+    amazon_fba: data/calendar/amazon_us.yaml
+  fee_max_age_days: 30

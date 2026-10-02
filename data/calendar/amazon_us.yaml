@@ -1,0 +1,37 @@
+# Amazon US seller calendar. Looked up each session; dates live here, never in code.
+
+channel: amazon_fba
+retrieved: 2026-10-02
+
+fee_periods:
+  - name: 2026 holiday peak fulfillment fees
+    start: 2026-10-15
+    end: 2027-01-14
+    source: https://sellercentral.amazon.com/help/hub/reference/external/GABBX6GZPA8MSZGW
+    note: >-
+      Fees are charged when the unit ships from the fulfillment center, so a
+      unit ordered before Oct 15 that ships on or after Oct 15 pays peak rates.
+      The 3.5% fuel and logistics surcharge applies on top.
+  - name: Q4 storage rates (Oct-Dec)
+    start: 2026-10-01
+    end: 2026-12-31
+    source: https://sellercentral.amazon.com/help/hub/reference/external/G3EDYEF6KUCFQTNM
+    note: Standard-size storage is $2.40 per cubic foot per month in Oct-Dec vs $0.78 in Jan-Sep.
+
+# Inventory must ARRIVE at Amazon by these dates to keep the Prime badge during
+# the event. Small shipments normally use minimal_splits.
+inbound_deadlines:
+  - event: Black Friday Week and Cyber Monday 2026
+    arrive_by:
+      awd: 2026-10-14
+      minimal_splits: 2026-10-21
+      amazon_optimized_splits: 2026-10-28
+    source: https://sellercentral.amazon.com/seller-forums/discussions/t/3e31fbb7-04e0-4ed4-873e-f74b1052e2ff
+    source_title: "Holiday 2026: Same fees, same eligibility, earlier deadlines (Amazon announcement)"
+  - event: Prime Big Deal Days 2026
+    arrive_by:
+      awd: 2026-09-02
+      minimal_splits: 2026-09-09
+      amazon_optimized_splits: 2026-09-16
+    source: https://sellercentral.amazon.com/seller-forums/discussions/t/3e31fbb7-04e0-4ed4-873e-f74b1052e2ff
+    source_title: "Holiday 2026: Same fees, same eligibility, earlier deadlines (Amazon announcement)"

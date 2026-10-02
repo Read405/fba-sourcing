@@ -6,6 +6,7 @@
 # Personal business data: stays on this machine, never pushed
 imports/
 exports/
+work/
 *.db
 *.db-journal
 *.db-wal
