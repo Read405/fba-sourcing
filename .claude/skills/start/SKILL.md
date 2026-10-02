@@ -22,3 +22,6 @@ description: Start-of-session routine for the sourcing system. Checks fee data f
 
 4. Re-run `start` and show the owner the status. Call out any deadline that
    can't realistically be met.
+
+5. Open the dashboard for the owner: `python -m sourcing dashboard --open`.
+   (`start`, `check` and `brand set` keep `dashboard.html` up to date.)

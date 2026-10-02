@@ -5,12 +5,14 @@ import argparse
 import datetime as dt
 import json
 import sys
+import webbrowser
 from pathlib import Path
 
 from . import db
 from .channels import ChannelNotAvailable
 from .config import load
 from .core import Candidate, EvalContext
+from .dashboard import demo_data, write_dashboard
 from .evaluator import evaluate
 from .gates import FIELD_GUIDE, ONLINE_FIELDS, OPTIONAL_FIELDS
 from .report import format_evaluation, to_record
@@ -40,6 +42,26 @@ def cmd_check(args, settings) -> int:
         print(format_evaluation(ev))
     if not args.no_save:
         print(f"\nSaved as evaluation #{db.save_evaluation(conn, ev, record)}.")
+        _refresh(settings, conn, ctx.eval_date)
+    return 0
+
+
+def _refresh(settings, conn, today: dt.date) -> None:
+    """Keep dashboard.html current after anything that changes the history."""
+    path = write_dashboard(settings, conn, today)
+    print(f"Dashboard updated: {path.name}")
+
+
+def cmd_dashboard(args, settings) -> int:
+    today = _date(args.date)
+    if args.demo:
+        settings, conn = demo_data(settings, today)
+        path = write_dashboard(settings, conn, today, demo=True)
+    else:
+        path = write_dashboard(settings, db.connect(settings.db_path), today)
+    print(f"Dashboard written: {path}")
+    if args.open:
+        webbrowser.open(path.resolve().as_uri())
     return 0
 
 
@@ -69,11 +91,15 @@ def cmd_brand(args, settings) -> int:
     complaints = "files complaints" if row["complaints"] else "no complaints recorded"
     print(f"{row['name']}: {row['status']} ({complaints}), updated {row['updated_at'][:10]}"
           + (f". Note: {row['note']}" if row["note"] else ""))
+    if args.brand_cmd == "set":
+        _refresh(settings, conn, dt.date.today())
     return 0
 
 
 def cmd_start(args, settings) -> int:
-    print(session_status(settings, db.connect(settings.db_path), _date(args.date)))
+    conn, today = db.connect(settings.db_path), _date(args.date)
+    print(session_status(settings, conn, today))
+    _refresh(settings, conn, today)
     return 0
 
 
@@ -108,7 +134,14 @@ def main(argv: list[str] | None = None) -> int:
     start = sub.add_parser("start", help="start-of-session status")
     start.add_argument("--date", help="today's date YYYY-MM-DD (default: system date)")
 
+    dash = sub.add_parser("dashboard", help="write dashboard.html from your history")
+    dash.add_argument("--date", help="today's date YYYY-MM-DD (default: system date)")
+    dash.add_argument("--open", action="store_true", help="open it in your browser")
+    dash.add_argument("--demo", action="store_true",
+                      help="write dashboard-demo.html from made-up examples (your history is untouched)")
+
     args = parser.parse_args(argv)
     settings = load()
-    handler = {"check": cmd_check, "template": cmd_template, "brand": cmd_brand, "start": cmd_start}[args.cmd]
+    handler = {"check": cmd_check, "template": cmd_template, "brand": cmd_brand, "start": cmd_start,
+               "dashboard": cmd_dashboard}[args.cmd]
     return handler(args, settings)

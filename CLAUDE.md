@@ -66,6 +66,9 @@ list. If only three products pass, report three and say so.
 - `sourcing/sources/`: where you buy (plug-ins). `sourcing/channels/`: where you
   sell (fees, eligibility, listing risks). Gates only talk to these interfaces.
 - `sourcing/db.py`: SQLite history. `report.py`: text output. `session.py`: `/start` status.
+- `sourcing/dashboard.py`: writes `dashboard.html` (gitignored, local only) from the
+  history; `start`, `check` and `brand set` refresh it. `dashboard --demo` uses an
+  in-memory database of made-up products, so it never touches the real history.
 - New source type: a class in `sourcing/sources/`, registered in
   `sources/__init__.py`, plus an entry in sources.yaml. New channel: a class in
   `sourcing/channels/`, its fee data file, and a `paths` entry in config.yaml.

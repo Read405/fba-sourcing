@@ -39,6 +39,8 @@ listing data; the code decides.
 
 5. **Report** the output. Lead with the verdict and its reason, then the money
    lines, then "To confirm before buying". Never change or soften the verdict.
+   The check also refreshes `dashboard.html`; if the owner wants the visual,
+   run `python -m sourcing dashboard --open`.
 
 6. When the owner confirms a brand's status in Seller Central, record it with
    `python -m sourcing brand set "<Brand>" open|ungated|gated` (add

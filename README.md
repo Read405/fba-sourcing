@@ -21,6 +21,17 @@ In Claude Code, from this folder:
 - `/start` runs the start-of-session routine: fee freshness, seller calendar, stage and capital.
 - `/check` evaluates a product you're looking at.
 
+## Dashboard
+
+`python -m sourcing dashboard --open` opens `dashboard.html` in your browser:
+available capital, the seller calendar, what's still needed to unlock BUY
+verdicts, every check you've run (select one to see its four gates and where
+the sale price goes), verdict counts, rejections by gate, and your brand list.
+It refreshes itself after every `start`, `check` and `brand set`, and it stays on
+your PC.
+
+To see it filled with example products first: `python -m sourcing dashboard --demo --open`.
+
 Or directly:
 
 ```
@@ -28,6 +39,7 @@ python -m venv .venv
 .venv/Scripts/pip install -r requirements.txt
 .venv/Scripts/python -m sourcing start
 .venv/Scripts/python -m sourcing check examples/candidate.json --no-save
+.venv/Scripts/python -m sourcing dashboard --open
 .venv/Scripts/python -m pytest
 ```
 
